@@ -1,0 +1,13 @@
+{
+    "title": "Hubschrauber",
+    "content": {
+        "description": "Eine kleine Beschreibung."
+    },
+    "navigation": {
+    	"german": "Deutsch",
+    	"english": "Englisch"
+    },
+    "headline": "HALLO DE",
+	"greeting": "Hallo {name}. Das ist Deutsch"
+
+}

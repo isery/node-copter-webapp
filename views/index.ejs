@@ -1,0 +1,107 @@
+<% include layoutTop %>
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" datahttp://localhost:3000/#-toggle="collapse" data-target=".nav-collapse">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="#"><%=title %></a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/connect">Connect</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/i18n">i18n</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Main hero unit for a primary marketing message or call to action -->
+  <div class="hero-unit">
+	<div class="row">
+	<div class="span5">
+	<h2>Progress</h2>
+      <p>So far its not been much. </p>
+      <div class="progress progress-info progress-striped active">
+        <div class="bar" style="width: 10%;"></div>
+      </div>
+      <p><a class="btn btn-primary btn-large" href="https://www.pivotaltracker.com/projects/790459">Call To Action &raquo;</a></p>
+      </div>
+      <div class="span5">
+        <div style="text-align:center; margin-top:20px; margin-left:30px;">
+   <a href="" style="font-size:19px;text-decoration:none; color: #039FAF;">Social Media</a>  
+   <a href="" style="font-size:49px;text-decoration:none; color: #87A800;">AR-Drone</a>  
+   <a href="" style="font-size:21px;text-decoration:none; color: #DE2159;">Javascript</a>  
+   <a href="" style="font-size:31px;text-decoration:none; color: #FF7600;">QR Codes</a>  
+   <a href="" style="font-size:24px;text-decoration:none; color: #DE2159;">WebGL</a>  
+   <a href="" style="font-size:68px;text-decoration:none; color: #039FAF;">Node.js</a> 
+   <a href="" style="font-size:19px;text-decoration:none; color: #FF7600;">HTML5</a>  
+ 
+   <a href="" style="font-size:36px;text-decoration:none; color: #FF7600;">Express</a>  
+   <a href="" style="font-size:16px;text-decoration:none; color: #039FAF;">Control</a>  
+   <a href="" style="font-size:29px;text-decoration:none; color: #DE2159;">Smartphone</a>  
+   <a href="" style="font-size:19px;text-decoration:none; color: #039FAF;">Gyrosensor</a>  
+   <a href="" style="font-size:16px;text-decoration:none; color: #87A800;">Livestream</a>  
+ <a href="" style="font-size:16px;text-decoration:none; color: #039FAF;">Share</a>
+   <a href="" style="font-size:24px;text-decoration:none; color: #87A800;">WebSockets</a>  
+   <a href="" style="font-size:16px;text-decoration:none; color: #FF7600;">WebRTC</a>  
+   <a href="" style="font-size:56px;text-decoration:none; color: #DE2159;">Mocha</a>  
+</div>
+</div>
+</div> <!-- row-->
+   </div>
+
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="span4">
+      <h2>Mission 1</h2>
+       <p>We want to create a website where you can log in with your smartphone or your desktop computer. After that the Server will connect you with the Drone . Once that is achieved you may control the drone with the keyboard or the gyrosensor of the smartphone. You will have a livestream on your device from the drone.</p>
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+    </div>  
+    
+    <div class="span4">
+      <h2>Mission 2</h2>
+       <p>All the Information we can get from the drone will be displayed at the livestream. As a Number or graphic symbol. Life of Battery as Symbol or turn and slip data as graphical indicator.  </p>
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+   </div>
+    <div class="span4">
+      <h2>Mission 3</h2>
+      <p>Furthermore, you can record a video with the drone and save it. Also you can take pictures and share them via Social Media.
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <h2>Mission 4</h2>
+       <p>Also we want to make our own livestream via WebRTC and share the flight to others on the Internet.</p>
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+    </div>  
+    
+    <div class="span4">
+      <h2>Mission 5</h2>
+       <p>Using the livestream we want to be able to scan QR codes. Why? Lets think about geo caching where you need to find hidden pieces. We want to use QR codes as geo cashes and put them at position where only a Drone can get. </p>
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+   </div>
+    <div class="span4">
+      <h2>Even More!</h2>
+      <p>We want to detect either objects or faces for future developments. Obviously this is not our last idea. We were thinking about visualizing the position of the drone in the browser using WebGL. Gyronsensor of the drone should tell us how it moves in the room. But that is probably something for 2015 ;-)</p>
+      <p><a class="btn" href="#">View details &raquo;</a></p>
+    </div>
+  </div>
+
+  <hr>
+
+  <footer>
+    <p>&copy; <%= author %></p>
+  </footer>
+
+</div> <!-- /container -->
+<% include layoutBottom %>

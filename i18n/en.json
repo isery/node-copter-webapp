@@ -1,0 +1,12 @@
+{
+  "title": "Node-Copter",
+  "content": {
+    "description": "A little description."
+  },
+  "navigation": {
+    "german": "German",
+    "english": "English"
+  },
+  "headline": "HELLO EN",
+  "greeting": "Hello {name}. That should be EN"
+} 
