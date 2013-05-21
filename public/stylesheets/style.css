@@ -41,6 +41,66 @@ body {
     -moz-user-select: none;
 }
 
+@-webkit-keyframes blinkTriangle { 
+   50% { border-color: transparent transparent #000000 transparent; } 
+}
+
+@-webkit-keyframes blinkText { 
+   50% { color: #000000; } 
+}
+
+#alertScreen{
+    position:absolute;
+    -webkit-animation-name: blinkTriangle ;
+    -webkit-animation-duration: .5s ;
+    -webkit-animation-timing-function: step-end ;
+    -webkit-animation-iteration-count: infinite ;
+    -webkit-animation-direction: alternate ;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 208px 360px 208px;
+    border-color: transparent transparent #ff0000 transparent;
+}
+
+#alertScreen2{
+    position:absolute;
+    margin-top: 33px;
+    margin-left: 28px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 180px 311.8px 180px;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+#alertScreen2 > p{
+    -webkit-animation-name: blinkText ;
+    -webkit-animation-duration: .5s ;
+    -webkit-animation-timing-function: step-end ;
+    -webkit-animation-iteration-count: infinite ;
+    -webkit-animation-direction: alternate ;
+    text-align:center;
+    color: #ff0000;
+    line-height: 50px;
+    width: 150px;
+    height: 50px;
+    font-size:50px;
+    margin-left: -70px;
+}
+
+#alertScreen2 > p:first-child{
+    margin-top: 120px;
+}
+
+#alertScreen2 > p:last-child{
+    margin-left: -80px;
+}
+
+#attention{
+    margin-left: 178px;
+}
+
 @media screen and (device-aspect-ratio: 40/71) and (orientation : landscape) {
     body{
         padding: 0 !important;

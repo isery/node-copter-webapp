@@ -2,6 +2,11 @@
 	var ControlKeyView = function (model, droneFaye, $element) {
 		this.model = model;
 		this.droneFaye = droneFaye;
+		this.maxSpeed = [];
+		this.maxSpeed[1] = 0.3;
+		this.maxSpeed[2] = 0.6;
+		this.maxSpeed[3] = 1;
+		this.currentMaxSpeed = 1;
 		this.speed= {
 			clockwise: 0,
 			counterClockwise: 0,
@@ -29,7 +34,8 @@
 
 		$(".container-fluid").append('\
 				<div id="keyboard"></div>\
-			');
+		');
+		$("#attention").hide();
 
 		var that = this;
 		this.render();
@@ -44,7 +50,21 @@
   			kd.tick();
 		});
 
+		//hope the control is still fast
+		document.addEventListener('keyup', function (evt) {
+		  if (evt.keyCode === 49) {
+		    that.currentMaxSpeed = 1; 
+		  }
+		  if (evt.keyCode === 50) {
+		  	that.currentMaxSpeed = 2;
+		  }
+		  if (evt.keyCode === 51) {
+		  	that.currentMaxSpeed = 3;
+		  }
+		});
+
 		this.normalControl(that);
+		this.showAlertView();
 		//this.switchControls(that);
 		//this.delayedControl(that);
 	};
@@ -63,17 +83,24 @@
 		}, 5000);
 	};
 
+	ControlKeyView.prototype.showAlertView = function(){
+		setTimeout(function(){
+			$("#attention").show();
+		}, 5000);
+	};
+
 	ControlKeyView.prototype.normalControl = function(that){
+
 		kd.RIGHT.down(function () {
-			that.speed.clockwise = that.speed.clockwise >=1 ? 1
+			that.speed.clockwise = that.speed.clockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.clockwise + 0.08 / (1-that.speed.clockwise);
 			
 			that.droneFaye.publish("/drone/move", {
 				action: "clockwise",
 				speed: that.speed.clockwise
 			});
-			$("#right").addClass('keydown');	  		
-
+			$("#right").addClass('keydown');
+			console.log(that.speed.clockwise);	  		
 		});
 
 		kd.RIGHT.up(function () {
@@ -85,7 +112,7 @@
 		});
 
 		kd.LEFT.down(function () {
-			that.speed.counterClockwise = that.speed.counterClockwise >=1 ? 1
+			that.speed.counterClockwise = that.speed.counterClockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.counterClockwise + 0.08 / (1-that.speed.counterClockwise);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -104,7 +131,7 @@
 		});
 
 		kd.UP.down(function () {
-			that.speed.up = that.speed.up >=1 ? 1
+			that.speed.up = that.speed.up >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.up + 0.08 / (1-that.speed.up);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -123,7 +150,7 @@
 		});
 
 		kd.DOWN.down(function () {
-			that.speed.down = that.speed.down >=1 ? 1
+			that.speed.down = that.speed.down >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.down + 0.08 / (1-that.speed.down);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -142,7 +169,7 @@
 		});
 
 		kd.W.down(function () {
-			that.speed.front = that.speed.front >=1 ? 1
+			that.speed.front = that.speed.front >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.front + 0.08 / (1-that.speed.front);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -161,7 +188,7 @@
 		});
 
 		kd.A.down(function () {
-			that.speed.left = that.speed.left >=1 ? 1
+			that.speed.left = that.speed.left >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.left + 0.08 / (1-that.speed.left);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -180,7 +207,7 @@
 		});
 
 		kd.D.down(function () {
-			that.speed.right = that.speed.right >=1 ? 1
+			that.speed.right = that.speed.right >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.right + 0.08 / (1-that.speed.right);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -199,7 +226,7 @@
 		});
 
 		kd.S.down(function () {
-			that.speed.back = that.speed.back >=1 ? 1
+			that.speed.back = that.speed.back >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.back + 0.08 / (1-that.speed.back);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -258,7 +285,7 @@
 
 	ControlKeyView.prototype.invertControl = function(that){
 		kd.RIGHT.down(function () {
-			that.speed.counterClockwise = that.speed.counterClockwise >=1 ? 1
+			that.speed.counterClockwise = that.speed.counterClockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.counterClockwise + 0.08 / (1-that.speed.counterClockwise);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -278,7 +305,7 @@
 		});
 
 		kd.LEFT.down(function () {
-			that.speed.clockwise = that.speed.clockwise >=1 ? 1
+			that.speed.clockwise = that.speed.clockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.clockwise + 0.08 / (1-that.speed.clockwise);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -297,7 +324,7 @@
 		});
 
 		kd.UP.down(function () {
-			that.speed.up = that.speed.up >=1 ? 1
+			that.speed.up = that.speed.up >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.up + 0.08 / (1-that.speed.up);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -316,7 +343,7 @@
 		});
 
 		kd.DOWN.down(function () {
-			that.speed.down = that.speed.down >=1 ? 1
+			that.speed.down = that.speed.down >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.down + 0.08 / (1-that.speed.down);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -335,7 +362,7 @@
 		});
 
 		kd.W.down(function () {
-			that.speed.back = that.speed.back >=1 ? 1
+			that.speed.back = that.speed.back >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.back + 0.08 / (1-that.speed.back);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -354,7 +381,7 @@
 		});
 
 		kd.A.down(function () {
-			that.speed.right = that.speed.right >=1 ? 1
+			that.speed.right = that.speed.right >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.right + 0.08 / (1-that.speed.right);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -373,7 +400,7 @@
 		});
 
 		kd.D.down(function () {
-			that.speed.left = that.speed.left >=1 ? 1
+			that.speed.left = that.speed.left >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.left + 0.08 / (1-that.speed.left);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -393,7 +420,7 @@
 		});
 
 		kd.S.down(function () {
-			that.speed.front = that.speed.front >=1 ? 1
+			that.speed.front = that.speed.front >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 				 : that.speed.front + 0.08 / (1-that.speed.front);
 			
 			that.droneFaye.publish("/drone/move", {
@@ -455,7 +482,7 @@
 		kd.RIGHT.down(function () {
 			that.delay.clockwise++;
 			if(that.delay.clockwise > that.MAXDELAY){
-				that.speed.clockwise = that.speed.clockwise >=1 ? 1
+				that.speed.clockwise = that.speed.clockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.clockwise + 0.08 / (1-that.speed.clockwise);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -478,7 +505,7 @@
 		kd.LEFT.down(function () {
 			that.delay.counterClockwise++;
 			if(that.delay.counterClockwise > that.MAXDELAY){
-				that.speed.counterClockwise = that.speed.counterClockwise >=1 ? 1
+				that.speed.counterClockwise = that.speed.counterClockwise >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.counterClockwise + 0.08 / (1-that.speed.counterClockwise);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -501,7 +528,7 @@
 		kd.UP.down(function () {
 			that.delay.up++;
 			if(that.delay.up > that.MAXDELAY){
-				that.speed.up = that.speed.up >=1 ? 1
+				that.speed.up = that.speed.up >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.up + 0.08 / (1-that.speed.up);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -524,7 +551,7 @@
 		kd.DOWN.down(function () {
 			that.delay.down++;
 			if(that.delay.down > that.MAXDELAY){
-				that.speed.down = that.speed.down >=1 ? 1
+				that.speed.down = that.speed.down >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.down + 0.08 / (1-that.speed.down);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -547,7 +574,7 @@
 		kd.W.down(function () {
 			that.delay.front++;
 			if(that.delay.front > that.MAXDELAY){
-				that.speed.front = that.speed.front >=1 ? 1
+				that.speed.front = that.speed.front >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.front + 0.08 / (1-that.speed.front);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -570,7 +597,7 @@
 		kd.A.down(function () {
 			that.delay.left++;
 			if(that.delay.left > that.MAXDELAY){
-				that.speed.left = that.speed.left >=1 ? 1
+				that.speed.left = that.speed.left >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.left + 0.08 / (1-that.speed.left);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -593,7 +620,7 @@
 		kd.D.down(function () {
 			that.delay.right++;
 			if(that.delay.right > that.MAXDELAY){
-				that.speed.right = that.speed.right >=1 ? 1
+				that.speed.right = that.speed.right >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.right + 0.08 / (1-that.speed.right);
 				
 				that.droneFaye.publish("/drone/move", {
@@ -616,7 +643,7 @@
 		kd.S.down(function () {
 			that.delay.back++;
 			if(that.delay.back > that.MAXDELAY){
-				that.speed.back = that.speed.back >=1 ? 1
+				that.speed.back = that.speed.back >=that.maxSpeed[that.currentMaxSpeed] ? that.maxSpeed[that.currentMaxSpeed]
 					 : that.speed.back + 0.08 / (1-that.speed.back);
 				
 				that.droneFaye.publish("/drone/move", {

@@ -4,8 +4,13 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
 		this.droneFaye = droneFaye;
 		this.element = $element;
 		var that = this;
-			
+		var activeRecording = false;
 		this.render();
+
+        this.droneFaye.subscribe("/drone/newvideo", function(path) {
+            $('#video').text = path;
+            $('#record').removeClass('btn-danger'); 
+        });
 
         $('.btn').on('click', function(ev) {
             $('.brand').text('test');
@@ -14,6 +19,21 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
                 speed: 0.3,
                 duration: 1000 * parseInt($("#duration").val())
             });  
+        });
+
+        $('#record').on('click', function(ev) {
+            activeRecording = !activeRecording;
+            if(activeRecording) {
+                $(this).addClass('btn-danger');
+            }
+            that.droneFaye.publish("/drone/recording", {
+
+            });  
+        });
+
+        $('#picture').on('click', function(ev) {
+            var src = that.model.getCurrentImg();
+            $('#link').text = src;
         });
 
 		$("*[data-action]").on("mousedown", function(ev) {
@@ -40,7 +60,7 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
             <button class="btn btn-warning" data-action="drone" data-param="land"><i class="icon-stop icon-white"></i> land</button> \
             <button class="btn btn-danger" data-action="drone" data-param="disableEmergency"><i class="icon-wrench icon-white"></i> recover</button> \
         	</div>\
-            <div class="input-append btn-group">\
+            <div class="input-append btn-group actions">\
                 <button class="btn dropdown-toggle" data-toggle="dropdown">Animations <span class="caret"></span></button>\
                 <ul class="dropdown-menu">\
                     <li data-action="animate" data-param="phiM30Deg"><a href="#">phiM30Deg</a></li>\
@@ -65,7 +85,11 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
                     <li data-action="animate" data-param="flipRight"><a href="#">flipRight</a></li>\
                 </ul>\
                 <input class="span1" id="duration" size="3" type="number" value="2" rel="tooltip" data-placement="bottom" title="Trigger animations. You can change the duration of an animation. It defaults to 2 seconds."> <span class="add-on"><i class="icon-time"></i></span>\
-            </div>\
+                <button class="btn" id="record"><i class="icon-facetime-video"></i> Record Flight</button> \
+                <button class="btn" id="picture"><i class="icon-camera"></i> Take Picture</button> \
+                <span id="link"></span> \
+                <span id="video"></span> \
+            </div> \
         ');
 	};
 	return ControlView;

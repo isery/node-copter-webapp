@@ -8,7 +8,12 @@ var http = require('http'),
     server = require('./server'),
     faye = require('faye'),
     drone = require('ar-drone').createClient(),
-    imageSendingPaused = false;
+    imageSendingPaused = false,
+    RecordingImgs = [], //stack for img
+    recording = false,
+    VideoMaker = require('./videomaker');
+    redisCli = require('./redisClient');
+
  
 drone.config('general:navdata_demo','TRUE');
 
@@ -31,6 +36,9 @@ socket = new faye.Client("http://localhost:" + (server.get("port")) + "/faye");
 //png with timestamp is going to be used for qr-code decetion afterwards
 drone.createPngStream().on("data", function(frame) {
     currentImg = frame;
+    if(recording) {
+        RecordingImgs.push(frame);
+    }
     if (imageSendingPaused) {
         return;
     }
@@ -61,6 +69,32 @@ socket.subscribe("/drone/drone", function(cmd) {
     console.log('drone command: ', cmd);
     return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
 });
+
+socket.subscribe("/drone/recording", function() {
+    if(recording) {
+        //ToDo: RecordingImgs get them and in ordner and make video
+        //was ist in jedem array element!
+        VideoMaker.makeVideo(function(filename) {
+            socket.publish("/drone/newvideo", "/video/" + (filename));
+            recording = false;
+        });
+    }
+    else {
+        recording = true;
+    }
+});
+
+socket.subscribe("/drone/qrcode", function(data) {
+    var code = data.code;
+    console.log("QRCODE arrived at server");
+    redisCli.saveToRedis(code,function(count,key) {
+       socket.publish("/drone/qrcodecounter", {
+            key:key,
+            count:count
+       }); 
+    });
+});
+
 
 drone.on('navdata', function(data) {
     return socket.publish("/drone/navdata", data);

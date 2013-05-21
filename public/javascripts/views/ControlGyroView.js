@@ -3,6 +3,7 @@ define(['jQuery', 'logger'], function($, logger) {
         this.model = model;
         this.controller = controller;
         this.droneFaye = droneFaye;
+        this.maxSpeed = 0.7;
         this.speed= {
             front: 0,
             back: 0,
@@ -18,7 +19,7 @@ define(['jQuery', 'logger'], function($, logger) {
             console.log("height"+ document.height);
             if(Math.round(event.beta)>20) {
                 console.log("right");
-                that.speed.right = that.speed.right >=1 ? 1 : that.speed.right + 0.04 / (1-that.speed.right);
+                that.speed.right = that.speed.right >=that.maxSpeed ? that.maxSpeed : that.speed.right + 0.04 / (1-that.speed.right);
                 console.log(that.speed.right);
                 that.droneFaye.publish("/drone/move", {
                     action: "right",
@@ -28,7 +29,7 @@ define(['jQuery', 'logger'], function($, logger) {
             }
             else if(Math.round(event.beta)<-20) {
                 console.log("left");
-                that.speed.left = that.speed.left >=1 ? 1 : that.speed.left + 0.04 / (1-that.speed.left);
+                that.speed.left = that.speed.left >=that.maxSpeed ? that.maxSpeed : that.speed.left + 0.04 / (1-that.speed.left);
                 console.log(that.speed.left);
                 that.droneFaye.publish("/drone/move", {
                     action: "left",
@@ -48,7 +49,7 @@ define(['jQuery', 'logger'], function($, logger) {
             
             if(Math.round(event.gamma)>20) {
                 console.log("front");
-                that.speed.front = that.speed.front >=1 ? 1 : that.speed.front + 0.04 / (1-that.speed.front);
+                that.speed.front = that.speed.front >=that.maxSpeed ? that.maxSpeed : that.speed.front + 0.04 / (1-that.speed.front);
                 console.log(that.speed.front);
                 that.droneFaye.publish("/drone/move", {
                     action: "front",
@@ -58,7 +59,7 @@ define(['jQuery', 'logger'], function($, logger) {
             }
             else if(Math.round(event.gamma)<-20) {
                 console.log("back");
-                that.speed.back = that.speed.back >=1 ? 1 : that.speed.back + 0.04 / (1-that.speed.back);
+                that.speed.back = that.speed.back >=that.maxSpeed ? that.maxSpeed : that.speed.back + 0.04 / (1-that.speed.back);
                 console.log(that.speed.back);
                 that.droneFaye.publish("/drone/move", {
                     action: "back",

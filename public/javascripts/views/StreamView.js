@@ -1,36 +1,46 @@
-define(['jQuery', 'logger', 'grid', 'version', 'detector', 'formatinf', 'errorlevel', 'bitmat', 'datablock', 'bmparser', 'datamask', 'rsdecoder', 'gf256poly', 'gf256', 'decoder', 'qrcode', 'findpat', 'alignpat', 'databr'],
-function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, datablock, bmparser, datamask, rsdecoder, gf256poly, gf256, decoder, qrcode, findpat, alignpat, databr) {
-	var StreamView = function (droneFaye, model, $element, jCanvas) {
+define(['jQuery', 'logger'], function($, logger) {
+	var StreamView = function (droneFaye, model, $element, qrDecoder) {
 		this.model=model;
 		this.droneFaye = droneFaye;
         this.element = $element;
-        this.canvas = jCanvas;
-        this.context = this.canvas.getContext("2d");
-        this.qrImage = new Image();
+        this.qrDecoder = qrDecoder;
         var that = this;
-        this.qrImage.onload = function(){
-            try{
-                qrcode.decode(that.qrImage.src);
-                qrcode.callback = function (data){
-                    console.log(data)
-                };
-            }
-            catch(e){
-            }
-        };
+        this.statistics = [];
+
         this.render();
 
 		this.droneFaye.subscribe("/drone/image", function(src) {
-            that.qrImage.src = src;    		
+            that.qrDecoder.setQrCodeSrc(src);  
+            that.model.setCurrentImg(src); 		
             $("#cam").attr({src: src});
   		});
-	};
 
- 
+  		this.droneFaye.subscribe("/drone/qrcodecounter", function(data) {
+  			var key = data.key;
+  			var count = data.count;
+  			console.log("qrcount streamview");
+  			that.statistics[key] = count;
+  			that.renderStatistics();
+  		});
+	};
 
 	StreamView.prototype.render = function () {
         this.element.append('<img id="cam" src="default.jpg" />');
 	};
+
+	StreamView.prototype.renderStatistics = function () {
+		console.log("rendern von statistics");
+		for(var item in this.statistics) {
+			this.element.append('<span>Key:'+ item +' count: '+item[i]);
+		} 
+	};
+
+	$(this.qrDecoder).on("QRCODE", function(data) {
+		console.log("StreamView data arrrived:" + data);
+		that.droneFaye.publish("/drone/qrcode", {
+			code:data
+		});
+	});
 	return StreamView;
 });
 

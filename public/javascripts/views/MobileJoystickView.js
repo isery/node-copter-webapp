@@ -3,6 +3,7 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
 		this.model = model;
 		this.droneFaye = droneFaye;
         this.element=$element;
+        this.maxSpeed = 0.7;
         this.speed= {
             clockwise: 0,
             counterClockwise: 0,
@@ -40,7 +41,7 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
 
             }
             else if(dx>50) {
-                that.speed.up = that.speed.up >=1 ? 1
+                that.speed.up = that.speed.up >=that.maxSpeed ? that.maxSpeed
                  : that.speed.up + 0.08 / (1-that.speed.up);
             
                 that.droneFaye.publish("/drone/move", {
@@ -51,7 +52,7 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
 
             }
             else if(dx<-50){
-                that.speed.down = that.speed.down >=1 ? 1
+                that.speed.down = that.speed.down >=that.maxSpeed ? that.maxSpeed
                  : that.speed.down + 0.08 / (1-that.speed.down);
             
                 that.droneFaye.publish("/drone/move", {
@@ -69,7 +70,7 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
                 that.dybool = false;
             }
             else if(dy>50) {
-                that.speed.clockwise = that.speed.clockwise >=1 ? 1
+                that.speed.clockwise = that.speed.clockwise >=that.maxSpeed ? that.maxSpeed
                  : that.speed.clockwise + 0.08 / (1-that.speed.clockwise);
             
                 that.droneFaye.publish("/drone/move", {
@@ -79,7 +80,7 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
                 that.dybool = true;
             }
             else if(dy<-50){
-               that.speed.counterClockwise = that.speed.counterClockwise >=1 ? 1
+               that.speed.counterClockwise = that.speed.counterClockwise >=that.maxSpeed ? that.maxSpeed
                  : that.speed.counterClockwise + 0.08 / (1-that.speed.counterClockwise);
             
                 that.droneFaye.publish("/drone/move", {

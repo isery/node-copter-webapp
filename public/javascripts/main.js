@@ -58,19 +58,23 @@ require.config({
 require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
 		'grid', 'version', 'detector', 'formatinf', 'errorlevel', 'bitmat', 'datablock', 'bmparser',
 		'datamask', 'rsdecoder', 'gf256poly', 'gf256', 'decoder', 'qrcode', 'findpat', 'alignpat', 'databr',
-		'model', 'controller',
+		'model', 'controller', 'views/QrDecoder',
 		'views/ControlKeyView', 'views/ControlGyroView', 'views/MobileStreamView','views/StreamView', 'views/MobileJoystickView','views/StateOfDroneView', 'views/ControlView'],
 	function($, _, kd, faye, joystick, bacon, 
 			grid, version, detector, formatinf, errorlevel, bitmat, datablock, bmparser,
 			datamask, rsdecoder, gf256poly, gf256, decoder, qrcode, findpat, alignpat, databr,
-			DroneModel, DroneController,
+			DroneModel, DroneController, QrDecoder,
 			ControlKeyView, ControlGyroView, MobileStreamView, StreamView, MobileJoystickView, StateOfDroneView, ControlView) {
+		
 		var droneFaye = new faye.Client("/faye", {
 			timeout: 120
 		});
+		
 		var stateOfDroneView;
 		var model = new DroneModel();
 		var controller = new DroneController(model);
+
+        var qrDecoder = new QrDecoder();
         if((bacon.isMobile() === true)) {
             var controlGyroView = new ControlGyroView(model, controller,droneFaye, $('#controlGyroView'));
             var mobileStreamView = new MobileStreamView(model, droneFaye, $("#stream"));
@@ -83,7 +87,7 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
         	}
         }
         else {
-            var streamView = new StreamView(droneFaye, model, $('#stream'), document.getElementById('canvasForQrCode'));
+            var streamView = new StreamView(droneFaye, model, $('#stream'), qrDecoder);
             stateOfDroneView = new StateOfDroneView(droneFaye, model, $('#stats'), $('#batteryProgress'));
             var controlView = new ControlView(model, droneFaye, $('#controlView'));
             var controlKeyView = new ControlKeyView(model, droneFaye, $('#controlKeyView'));

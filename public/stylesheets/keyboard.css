@@ -26,7 +26,8 @@
 		inset 0 0 8px #bbb,
 		0 1px 0 #aaa,
 		0 4px 0 #bbb,
-		0 10px 30px #111;}
+		0 10px 30px #111;
+}
 
 ul {list-style-type: none; width: 784px; margin: 0 auto;}
 li {float: left;}
@@ -227,8 +228,7 @@ h2 {
 p {
 	color: #999;
 	font: 9pt/17pt arial;
-	margin: 0 0 50px;}
-	
+}	
 small {
 	font: italic 8pt/12pt arial;
 	color: #aaa;

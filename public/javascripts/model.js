@@ -5,6 +5,7 @@ define(['jQuery', 'logger', 'keydrown', 'underscore', 'faye', 'bacon'],
 		this._batteryState = undefined;
 		this._droneState={
 		};
+		this.currentImg;
 
 		this._isMobileBrowser = this._checkIfMobile(navigator.userAgent || navigator.vendor || window.opera);
 	};
@@ -19,6 +20,13 @@ define(['jQuery', 'logger', 'keydrown', 'underscore', 'faye', 'bacon'],
 		} 
 
 	};
+
+	DroneModel.prototype.setCurrentImg = function(src) {
+		this.currentImg = src;
+	}
+	DroneModel.prototype.getCurrentImg = function() {
+		return this.currentImg;
+	}
 
 
 	return DroneModel;

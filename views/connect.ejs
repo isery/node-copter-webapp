@@ -19,9 +19,9 @@
   <div class="navbar-inner">
     <div class="container">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
       </a>
       <a class="brand" href="#"><%= title %></a>
       <div class="nav-collapse">
@@ -45,7 +45,16 @@
               </div>
           </div>
           <div id="batteryProgress"></div>
-          <div id="stream"></div>
+          <div id="stream">
+            <div id="attention">
+              <div id="alertScreen"></div>
+              <div id="alertScreen2">
+                <p>LAND</p>
+                <p>THE</p>
+                <p>DRONE</p>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="stats" class="span4"></div>
       </div>
@@ -54,8 +63,7 @@
 <div class="row" id="mobileState">
   <div id="mobileButtons" class="span4"></div><div id="mobileBatteryProgress" class="span7"></div>    
 </div>
-<canvas id="canvasForQrCode"></canvas>
-  <hr>
+<hr>
 
   <footer>
     <p>&copy; <%= author %></p>
