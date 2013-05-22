@@ -9,7 +9,7 @@ function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, data
                 qrcode.decode(that.qrImg.src);
                 qrcode.callback = function (data){
                     //QR-Code Inhalt hier verfügbar!!
-                    console.log("callback of qrcode");
+                    //console.log("callback of qrcode");
                     that.checkMessage(data)
                 };
             }catch(e){

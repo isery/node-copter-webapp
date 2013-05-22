@@ -33,6 +33,9 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
 
         $('#picture').on('click', function(ev) {
             var src = that.model.getCurrentImg();
+            console.log("----------------");
+            console.log(src);
+            console.log("----------------");
             $('#link').text = src;
         });
 

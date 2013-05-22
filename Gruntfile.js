@@ -24,7 +24,8 @@ module.exports = function(grunt) {
     },
     mochaTestConfig: {
       options: {
-        reporter: 'nyan'        
+        reporter: 'nyan',
+        timeout: '8000'        
       }
     }
   });
