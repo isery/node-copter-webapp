@@ -18,15 +18,13 @@ define(['jQuery', 'logger'], function($, logger) {
   		this.droneFaye.subscribe("/drone/qrcodecounter", function(data) {
   			var key = data.key;
   			var count = data.count;
-  			console.log("qrcount streamview");
   			that.statistics[key] = count;
   			that.renderStatistics();
   		});
 
-  		$(this.qrDecoder).on("QRCODE", function(e) {
-			console.log(e.data);
+  		$(this.qrDecoder).on("QRCODE", function(e,data) {
 			that.droneFaye.publish("/drone/qrcode", {
-				code:e.data
+				code:data.data
 			});
 		});
 	};
@@ -36,10 +34,21 @@ define(['jQuery', 'logger'], function($, logger) {
 	};
 
 	StreamView.prototype.renderStatistics = function () {
-		console.log("rendern von statistics");
-		for(var item in this.statistics) {
-			this.element.append('<span>Key:'+ item +' count: '+item[i]);
-		} 
+		var value;
+		for(var index in this.statistics) {
+			if(this.statistics.hasOwnProperty(index)) {
+				value = index.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');;
+				if(($("#"+value).length)>0){
+					console.log("asdf");
+					$("#"+value).html(this.statistics[index]);
+				}
+				else {
+					console.log("asdfasdfasdfasdfasfasdfasdfasdfasdfasdfasdfasdf");
+					$("tbody").append('<tr><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
+				}
+				//$("tbody").append('<tr><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
+			}
+		}
 	};
 
 	

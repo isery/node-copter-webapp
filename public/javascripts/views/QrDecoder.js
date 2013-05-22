@@ -14,14 +14,12 @@ function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, data
             }catch(e){
             }
         };
-
     };
 
     QrDecoder.prototype.checkMessage = function(data){
-        //Todo find out what data is when error
-        console.log(data);
-        if(data != "Error") {
-            //$(this).trigger("QRCODE",data);
+        var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+        if(urlPattern.test(data)) {
+            $(this).trigger("QRCODE",{data:data});
         }
     }
 
