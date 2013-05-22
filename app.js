@@ -13,7 +13,7 @@ var http = require('http'),
     recording = false,
     VideoMaker = require('./videomaker'),
     fs = require('fs');
-    //redisCli = require('./redisClient');
+    redisCli = require('./redisClient');
 
  
 drone.config('general:navdata_demo','TRUE');
@@ -51,7 +51,7 @@ drone.createPngStream().on("data", function(frame) {
     imageSendingPaused = true;
     return setTimeout((function() {
         return imageSendingPaused = false;
-    }), 100);
+    }), 1000);
 });
 
 //Drone-Commands for either fly in a direction, perform an animation
@@ -91,12 +91,12 @@ socket.subscribe("/drone/recording", function() {
 socket.subscribe("/drone/qrcode", function(data) {
     var code = data.code;
     console.log("QRCODE arrived at server");
-    /*redisCli.saveToRedis(code,function(count,key) {
+    redisCli.saveToRedis(code,function(count,key) {
        socket.publish("/drone/qrcodecounter", {
             key:key,
             count:count
        }); 
-    });*/
+    });
 });
 
 socket.subscribe("/drone/saveImage", function(){

@@ -16,7 +16,9 @@ npm-debug.log
 .DS_Store
 node_modules/*
 .idea/*
-video/*
-picture/*
+video/*.png
+video/*.mp4
+
+picture/*.png
 
 *.log

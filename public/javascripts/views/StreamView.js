@@ -22,6 +22,13 @@ define(['jQuery', 'logger'], function($, logger) {
   			that.statistics[key] = count;
   			that.renderStatistics();
   		});
+
+  		$(this.qrDecoder).on("QRCODE", function(e) {
+			console.log(e.data);
+			that.droneFaye.publish("/drone/qrcode", {
+				code:e.data
+			});
+		});
 	};
 
 	StreamView.prototype.render = function () {
@@ -35,12 +42,7 @@ define(['jQuery', 'logger'], function($, logger) {
 		} 
 	};
 
-	$(this.qrDecoder).on("QRCODE", function(data) {
-		console.log("StreamView data arrrived:" + data);
-		that.droneFaye.publish("/drone/qrcode", {
-			code:data
-		});
-	});
+	
 	return StreamView;
 });
 

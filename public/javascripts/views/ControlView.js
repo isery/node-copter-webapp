@@ -13,7 +13,6 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
         });
 
         $('.btn').on('click', function(ev) {
-            $('.brand').text('test');
             that.droneFaye.publish("/drone/" + $(this).attr("data-action"), {
                 action: $(this).attr("data-param"),
                 speed: 0.3,
