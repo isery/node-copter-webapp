@@ -51,7 +51,7 @@ drone.createPngStream().on("data", function(frame) {
     imageSendingPaused = true;
     return setTimeout((function() {
         return imageSendingPaused = false;
-    }), 1000);
+    }), 100);
 });
 
 //Drone-Commands for either fly in a direction, perform an animation
