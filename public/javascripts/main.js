@@ -49,6 +49,12 @@ require.config({
 		},
 		'findpat':{
 			deps:['qrcode']
+		},
+		'gf256':{
+			deps:['gf256poly']
+		},
+		'decoder':{
+			deps:['gf256']
 		}
 	}
 });
