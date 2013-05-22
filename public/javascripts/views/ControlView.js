@@ -27,7 +27,6 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
                 $(this).addClass('btn-danger');
             }
             that.droneFaye.publish("/drone/recording", {
-
             });  
         });
 
@@ -35,8 +34,8 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
             var src = that.model.getCurrentImg();
             console.log("----------------");
             console.log(src);
-            console.log("----------------");
             $('#link').text = src;
+            that.droneFaye.publish("/drone/saveImage",{src: src});
         });
 
 		$("*[data-action]").on("mousedown", function(ev) {

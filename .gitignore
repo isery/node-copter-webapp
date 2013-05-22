@@ -6,7 +6,7 @@ lib-cov
 *.out
 *.pid
 *.gz
-
+*.png
 pids
 logs
 results
@@ -16,4 +16,7 @@ npm-debug.log
 .DS_Store
 node_modules/*
 .idea/*
+video/*
+picture/*
+
 *.log

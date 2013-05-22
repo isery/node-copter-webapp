@@ -9,10 +9,11 @@ var http = require('http'),
     faye = require('faye'),
     drone = require('ar-drone').createClient(),
     imageSendingPaused = false,
-    RecordingImgs = [], //stack for img
+    folder = '',
     recording = false,
-    VideoMaker = require('./videomaker');
-    redisCli = require('./redisClient');
+    VideoMaker = require('./videomaker'),
+    fs = require('fs');
+    //redisCli = require('./redisClient');
 
  
 drone.config('general:navdata_demo','TRUE');
@@ -36,13 +37,15 @@ socket = new faye.Client("http://localhost:" + (server.get("port")) + "/faye");
 //png with timestamp is going to be used for qr-code decetion afterwards
 drone.createPngStream().on("data", function(frame) {
     currentImg = frame;
+    var seconds = new Date().getTime();
     if(recording) {
-        RecordingImgs.push(frame);
+        fs.writeFile('video/'+folder+'/'+seconds+'.png', currentImg, 'binary', function(err){
+            if(err) throw err;
+        });
     }
     if (imageSendingPaused) {
         return;
     }
-    var seconds = new Date().getTime();
     socket.publish("/drone/image", "/image/" + (seconds));
 
     imageSendingPaused = true;
@@ -72,14 +75,15 @@ socket.subscribe("/drone/drone", function(cmd) {
 
 socket.subscribe("/drone/recording", function() {
     if(recording) {
-        //ToDo: RecordingImgs get them and in ordner and make video
-        //was ist in jedem array element!
-        VideoMaker.makeVideo(function(filename) {
+        VideoMaker.makeVideo('./video/'+folder+'/',function(filename) {
             socket.publish("/drone/newvideo", "/video/" + (filename));
             recording = false;
         });
     }
     else {
+        var d = new Date();
+        folder = d.getTime();
+        fs.mkdirSync('video/'+folder); 
         recording = true;
     }
 });
@@ -87,11 +91,20 @@ socket.subscribe("/drone/recording", function() {
 socket.subscribe("/drone/qrcode", function(data) {
     var code = data.code;
     console.log("QRCODE arrived at server");
-    redisCli.saveToRedis(code,function(count,key) {
+    /*redisCli.saveToRedis(code,function(count,key) {
        socket.publish("/drone/qrcodecounter", {
             key:key,
             count:count
        }); 
+    });*/
+});
+
+socket.subscribe("/drone/saveImage", function(){
+    var imagedata = '';
+    var d = new Date();
+    var imageName = "droneImage"+d.getTime()+".png";
+    fs.writeFile('picture/'+imageName, currentImg, 'binary', function(err){
+        if(err) throw err;
     });
 });
 
@@ -105,5 +118,7 @@ server.get("/image/:id", function(req, res) {
     res.writeHead(200, {
         "Content-Type": "image/png"
     });
-    return res.end(currentImg, "binary");
+    res.end(currentImg, "binary");
 });
+
+

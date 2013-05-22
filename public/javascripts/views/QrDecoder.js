@@ -6,12 +6,11 @@ function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, data
         var that = this;
         this.qrImg.onload = function(){
             try{
-                qrcode.decode(that.qrImg.src);
-                qrcode.callback = function (data){
+                //qrcode.decode(that.qrImg.src);
+                //qrcode.callback = function (data){
                     //QR-Code Inhalt hier verfügbar!!
-                    //console.log("callback of qrcode");
-                    that.checkMessage(data)
-                };
+                    //that.checkMessage(data)
+                //};
             }catch(e){
             }
         };
@@ -21,7 +20,6 @@ function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, data
     QrDecoder.prototype.checkMessage = function(data){
         //Todo
         if(data != "Error") {
-            console.log("qrcode found:" + data);
             $(this).trigger("QRCODE",data);
         }
     }
