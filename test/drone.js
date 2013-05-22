@@ -90,7 +90,7 @@ describe('Check if the drone is connected and ', function(){
         browser.close();
 
     });
-/* 
+ 
     it('shows the battery status of the drone (only if drone is connected)' , function(done){
         browser.visit("/connect", function () {
             expect(browser.success).to.equal(true);
@@ -119,7 +119,7 @@ describe('Check if the drone is connected and ', function(){
                 },4000);
             });
         });
-    });*/
+    });
 
    it('shows that a faye packet will arrive when takeoff button is pressend' , function(done){
         browser.visit("/connect", function () {

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node app",
-    "test": "grunt"
+    "test": "grunt --force"
   },
   "dependencies": {
     "express": "3.1.0",

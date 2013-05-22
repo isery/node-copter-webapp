@@ -64,7 +64,7 @@
 		});
 
 		this.normalControl(that);
-		this.showAlertView();
+		//this.showAlertView();
 		//this.switchControls(that);
 		//this.delayedControl(that);
 	};
@@ -87,6 +87,13 @@
 		setTimeout(function(){
 			$("#attention").show();
 		}, 5000);
+	};
+
+	ControlKeyView.prototype.startEmergencyMode = function(that){
+		setTimeout(function(){
+			that.showAlertView();
+			that.switchControls();
+		}, 20000);
 	};
 
 	ControlKeyView.prototype.normalControl = function(that){
