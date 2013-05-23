@@ -31,6 +31,8 @@ define(['jQuery', 'logger'], function($, logger) {
 
 	StreamView.prototype.render = function () {
         this.element.append('<img id="cam" src="default.jpg" />');
+        $("#attention").css("opacity","100");
+        $("#attention").hide();
 	};
 
 	StreamView.prototype.renderStatistics = function () {
@@ -39,11 +41,9 @@ define(['jQuery', 'logger'], function($, logger) {
 			if(this.statistics.hasOwnProperty(index)) {
 				value = index.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');;
 				if(($("#"+value).length)>0){
-					console.log("asdf");
 					$("#"+value).html(this.statistics[index]);
 				}
 				else {
-					console.log("asdfasdfasdfasdfasfasdfasdfasdfasdfasdfasdfasdf");
 					$("tbody").append('<tr><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
 				}
 				//$("tbody").append('<tr><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');

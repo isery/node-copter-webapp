@@ -30,12 +30,12 @@
 		};
 		this.MAXDELAY=50;
 
-		this.invertControlling = false;
+		this.invertControlling = true;
 
-		$(".container-fluid").append('\
+		/*$(".container-fluid").append('\
 				<div id="keyboard"></div>\
-		');
-		$("#attention").hide();
+		');*/
+		
 
 		var that = this;
 		this.render();
@@ -63,10 +63,9 @@
 		  }
 		});
 
-		this.normalControl(that);
-		//this.showAlertView();
-		//this.switchControls(that);
-		//this.delayedControl(that);
+		this.normalControl(that); //** for normal fly
+		//this.startEmergencyMode(that);
+
 	};
 
 
@@ -84,15 +83,14 @@
 	};
 
 	ControlKeyView.prototype.showAlertView = function(){
-		setTimeout(function(){
-			$("#attention").show();
-		}, 5000);
+		$("#attention").show();
 	};
 
 	ControlKeyView.prototype.startEmergencyMode = function(that){
 		setTimeout(function(){
 			that.showAlertView();
-			that.switchControls();
+			that.switchControls(that);
+			//this.delayedControl(that);
 		}, 20000);
 	};
 

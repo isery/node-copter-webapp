@@ -31,8 +31,6 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
 
         $('#picture').on('click', function(ev) {
             var src = that.model.getCurrentImg();
-            console.log("----------------");
-            console.log(src);
             $('#link').text = src;
             that.droneFaye.publish("/drone/saveImage",{src: src});
         });
@@ -86,8 +84,8 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
                     <li data-action="animate" data-param="flipRight"><a href="#">flipRight</a></li>\
                 </ul>\
                 <input class="span1" id="duration" size="3" type="number" value="2" rel="tooltip" data-placement="bottom" title="Trigger animations. You can change the duration of an animation. It defaults to 2 seconds."> <span class="add-on"><i class="icon-time"></i></span>\
-                <button class="btn" id="record"><i class="icon-facetime-video"></i> Record Flight</button> \
-                <button class="btn" id="picture"><i class="icon-camera"></i> Take Picture</button> \
+                <button class="btn" id="record"><i class="icon-facetime-video"></i> Record</button> \
+                <button class="btn" id="picture"><i class="icon-camera"></i> Snap</button> \
                 <span id="link"></span> \
                 <span id="video"></span> \
             </div> \
