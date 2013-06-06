@@ -9,10 +9,9 @@ define(['jQuery', 'logger'], function($, logger) {
 
 
         this.render();
-
 		this.droneFaye.subscribe("/drone/image", function(src) {
             that.qrDecoder.setQrCodeSrc(src);  
-            that.model.setCurrentImg(src); 		
+            that.model.setCurrentImg(src); 
             $("#cam").attr({src: src});
   		});
 

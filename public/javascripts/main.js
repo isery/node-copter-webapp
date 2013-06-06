@@ -9,6 +9,7 @@ require.config({
 		'faye'		: '../vendor/faye-client',
 		'joystick'	: '../vendor/virtualjoystick',
 		'bacon'		: '../vendor/bacon.min',
+		'onsnap'	: '../vendor/onsnap', 
 		'grid'		: '../vendor/qrcode/grid',
 		'version'	: '../vendor/qrcode/version',
 		'detector'	: '../vendor/qrcode/detector',
@@ -61,12 +62,12 @@ require.config({
 
 
 
-require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
+require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon', 'onsnap',
 		'grid', 'version', 'detector', 'formatinf', 'errorlevel', 'bitmat', 'datablock', 'bmparser',
 		'datamask', 'rsdecoder', 'gf256poly', 'gf256', 'decoder', 'qrcode', 'findpat', 'alignpat', 'databr',
 		'model', 'controller', 'views/QrDecoder',
 		'views/ControlKeyView', 'views/ControlGyroView', 'views/MobileStreamView','views/StreamView', 'views/MobileJoystickView','views/StateOfDroneView', 'views/ControlView'],
-	function($, _, kd, faye, joystick, bacon,
+	function($, _, kd, faye, joystick, bacon, onsnap,
 			grid, version, detector, formatinf, errorlevel, bitmat, datablock, bmparser,
 			datamask, rsdecoder, gf256poly, gf256, decoder, qrcode, findpat, alignpat, databr,
 			DroneModel, DroneController, QrDecoder,
@@ -85,6 +86,7 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
         var droneFaye = new faye.Client("/faye", {
             timeout: 120
         });
+        
 
         droneFaye.addExtension({
             outgoing: function(message, callback) {
@@ -107,14 +109,15 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
                 $('#token').html('<i class="icon-white icon-plane"></i> Drone in Use');
             }
             else {
-                $('.btn').removeClass('disabled');
+                $('.controls').removeClass('disabled');
                 $('#token').removeClass('btn-danger').addClass('disabled').addClass('btn-primary');
                 $('#token').html('<i class="icon-white icon-plane"></i> Fly the Drone');
             }
         });
 
         droneFaye.subscribe("/drone/freeDrone", function(data) {
-            $('.btn').addClass('disabled');
+            $('.controls').addClass('disabled');
+            $('#snap').removeClass('disbled');
             $('#token').removeClass('btn-danger').removeClass('disabled').addClass('btn-primary');
             $('#token').html('<i class="icon-white icon-plane"></i> Fly the Drone');
         });
