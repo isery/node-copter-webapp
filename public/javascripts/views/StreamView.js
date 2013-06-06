@@ -7,6 +7,7 @@ define(['jQuery', 'logger'], function($, logger) {
         var that = this;
         this.statistics = [];
 
+
         this.render();
 
 		this.droneFaye.subscribe("/drone/image", function(src) {
@@ -21,6 +22,7 @@ define(['jQuery', 'logger'], function($, logger) {
   			that.statistics[key] = count;
   			that.renderStatistics();
   		});
+
 
   		$(this.qrDecoder).on("QRCODE", function(e,data) {
 			that.droneFaye.publish("/drone/qrcode", {

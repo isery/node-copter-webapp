@@ -55,7 +55,7 @@ require.config({
 		},
 		'decoder':{
 			deps:['gf256']
-		}
+		},
 	}
 });
 
@@ -66,37 +66,77 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon',
 		'datamask', 'rsdecoder', 'gf256poly', 'gf256', 'decoder', 'qrcode', 'findpat', 'alignpat', 'databr',
 		'model', 'controller', 'views/QrDecoder',
 		'views/ControlKeyView', 'views/ControlGyroView', 'views/MobileStreamView','views/StreamView', 'views/MobileJoystickView','views/StateOfDroneView', 'views/ControlView'],
-	function($, _, kd, faye, joystick, bacon, 
+	function($, _, kd, faye, joystick, bacon,
 			grid, version, detector, formatinf, errorlevel, bitmat, datablock, bmparser,
 			datamask, rsdecoder, gf256poly, gf256, decoder, qrcode, findpat, alignpat, databr,
 			DroneModel, DroneController, QrDecoder,
 			ControlKeyView, ControlGyroView, MobileStreamView, StreamView, MobileJoystickView, StateOfDroneView, ControlView) {
-		
-		var droneFaye = new faye.Client("/faye", {
-			timeout: 120
-		});
-		
-		var stateOfDroneView;
-		var model = new DroneModel();
-		var controller = new DroneController(model);
 
+        var stateOfDroneView;
+        var model = new DroneModel();
+        var controller = new DroneController(model);
+        var controlGyroView;
+        var controlView;
+        var controlKeyView;
+        var mobileJoystickView;
+        var USER_TOKEN = '';
+        var guid = Math.floor(Math.random()*100)+10;
         var qrDecoder = new QrDecoder();
+        var droneFaye = new faye.Client("/faye", {
+            timeout: 120
+        });
+
+        droneFaye.addExtension({
+            outgoing: function(message, callback) {
+                if(message.channel === '/drone/drone' || message.channel === '/drone/move'
+                    || message.channel === '/drone/animate' || message.channel === '/drone/recording'
+                    || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage'
+                    || message.channel === '/drone/release') {
+                    message.ext = message.ext || {};
+                    message.ext.token = USER_TOKEN;
+                }
+                callback(message)
+            }
+        });
+
+        droneFaye.subscribe("/drone/token/"+guid, function(data) {
+            USER_TOKEN = data.token;
+            if(USER_TOKEN === 0) {
+                $('#token').removeClass('btn-primary');
+                $('#token').addClass('btn-danger');
+                $('#token').html('<i class="icon-white icon-plane"></i> Drone in Use');
+            }
+            else {
+                $('.btn').removeClass('disabled');
+                $('#token').removeClass('btn-danger').addClass('disabled').addClass('btn-primary');
+                $('#token').html('<i class="icon-white icon-plane"></i> Fly the Drone');
+            }
+        });
+
+        droneFaye.subscribe("/drone/freeDrone", function(data) {
+            $('.btn').addClass('disabled');
+            $('#token').removeClass('btn-danger').removeClass('disabled').addClass('btn-primary');
+            $('#token').html('<i class="icon-white icon-plane"></i> Fly the Drone');
+        });
+
+
+        //Render the whole
         if((bacon.isMobile() === true)) {
-            var controlGyroView = new ControlGyroView(model, controller,droneFaye, $('#controlGyroView'));
             var mobileStreamView = new MobileStreamView(model, droneFaye, $("#stream"));
-        	var mobileJoystickView = new MobileJoystickView(model, droneFaye, $("#stream"));
+            controlGyroView = new ControlGyroView(model, controller,droneFaye, $('#controlGyroView'));
+            mobileJoystickView = new MobileJoystickView(model, droneFaye, $("#stream"),guid);
+
             if(model._isMobileBrowser){
-            	window.location.hash = '#stream';
+                window.location.hash = '#stream';
             }
             else{
-            	stateOfDroneView = new StateOfDroneView(droneFaye, model, $('#stats'), $('#mobileBatteryProgress'));
-        	}
+                stateOfDroneView = new StateOfDroneView(droneFaye, model, $('#stats'), $('#mobileBatteryProgress'));
+            }
         }
         else {
+            controlView = new ControlView(model, droneFaye, $('#controlView'),guid);
             var streamView = new StreamView(droneFaye, model, $('#stream'), qrDecoder);
             stateOfDroneView = new StateOfDroneView(droneFaye, model, $('#stats'), $('#batteryProgress'));
-            var controlView = new ControlView(model, droneFaye, $('#controlView'));
-            var controlKeyView = new ControlKeyView(model, droneFaye, $('#controlKeyView'));
+            controlKeyView = new ControlKeyView(model, droneFaye, $('#controlKeyView'));
         }
-
 });

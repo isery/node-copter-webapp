@@ -1,9 +1,10 @@
 define(['jQuery', 'logger', 'joystick'], function($, logger) {
-	var MobileJoystickView = function (model, droneFaye, $element) {
+	var MobileJoystickView = function (model, droneFaye, $element, guid) {
 		this.model = model;
 		this.droneFaye = droneFaye;
         this.element=$element;
         this.maxSpeed = 0.7;
+        this.guid = guid;
         this.speed= {
             clockwise: 0,
             counterClockwise: 0,
@@ -21,6 +22,21 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
             that.droneFaye.publish("/drone/" + $(this).attr("data-action"), {
                 action: $(this).attr("data-param")
             });
+        });
+
+        $('#release').on('click', function(ev) {
+            if(!$(this).hasClass('disabled')) {
+                that.droneFaye.publish("/drone/release",{});
+            }
+        });
+
+        $('#token').on('click', function(ev) {
+            if(!$(this).hasClass('disabled')) {
+                console.log('clicked'+that.guid);
+                that.droneFaye.publish("/drone/getToken", {
+                    guid: that.guid
+                });
+            }
         });
 
         this.joystick   = new VirtualJoystick({
@@ -95,9 +111,11 @@ define(['jQuery', 'logger', 'joystick'], function($, logger) {
 
     MobileJoystickView.prototype.render = function(){
         $('#mobileButtons').append('<div class="input-append btn-group">\
-            <button id="start" class="btn btn-success" data-action="drone" data-param="takeoff"><i class="icon-play icon-white"></i> takeoff</button> \
-            <button id="land" class="btn btn-warning" data-action="drone" data-param="land"><i class="icon-stop icon-white"></i> land</button> \
-            <button id="recover" class="btn btn-danger" data-action="drone" data-param="disableEmergency"><i class="icon-wrench icon-white"></i> recover</button>\
+            <button id="start" class="btn btn-success disabled" data-action="drone" data-param="takeoff"><i class="icon-play icon-white"></i> takeoff</button> \
+            <button id="land" class="btn btn-warning disabled" data-action="drone" data-param="land"><i class="icon-stop icon-white"></i> land</button> \
+            <button id="recover" class="btn btn-danger disabled" data-action="drone" data-param="disableEmergency"><i class="icon-wrench icon-white"></i> recover</button>\
+            <button class="btn btn-info disabled" id="release"><i class="icon-eject icon-white"></i> release</button> \
+            <button class="btn btn-primary" id="token"><i class="icon-white icon-plane"></i> Fly the Drone</button> \
         </div>');
     };
 	return MobileJoystickView;

@@ -2,36 +2,133 @@
 /**
  * Module dependencies.
  */
-
-
-var http = require('http'),
-    server = require('./server'),
-    faye = require('faye'),
-    drone = require('ar-drone').createClient(),
+var folder = '', 
+	drone = require('ar-drone').createClient(),
     imageSendingPaused = false,
-    folder = '',
     recording = false,
     VideoMaker = require('./videomaker'),
+	faye = require('faye'),
+    crypto = require('crypto'),
+    token = '0',
     fs = require('fs'),
-    redisCli = require('./redisClient');
+    redisCli = require('./redisClient'),
+    droneInUse = false,
+	http = require('http'),
+    server = require('./server');
 
- 
-drone.config('general:navdata_demo','TRUE');
-
-//Turning NAV-DATA on
-drone.config('general:navdata_demo','TRUE');
 
 module.exports = httpServer = http.createServer(server).listen(server.get('port'), function(){
   console.log("Express server listening on port " + server.get('port'));
 });
 
+
+
+//Server getting the Image from Livestream
+server.get("/image/:id", function(req, res) {
+    res.writeHead(200, {
+        "Content-Type": "image/png"
+    });
+    res.end(currentImg, "binary");
+});
+
+//***** Faye communication ******
+
+var serverAuth = {
+    incoming: function(message, callback) {
+        if(message.channel === '/drone/drone' || message.channel === '/drone/move'
+            || message.channel === '/drone/animate' || message.channel === '/drone/recording'
+            || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage'
+            || message.channel === '/drone/release') {
+            var msgToken = message.ext && message.ext.token;
+            if (token !== msgToken) {
+                message.error = 'Invalid auth token';
+            }
+        }
+        callback(message);
+    }
+};
+
+var setNewToken = function(callback) {
+    crypto.randomBytes(48, function(ex, buf) {
+        token = buf.toString('hex');
+        if(typeof callback === 'function') {
+            callback();
+        }
+    });
+}
+
 var adapter = new faye.NodeAdapter({
     mount:'/faye',
     timeout:45
 });
+
+//Drone-Commands for either fly in a direction, perform an animation
+//or do hard-coded moves (takeOff, land, recover)
+adapter.getClient().subscribe("/drone/move", function(cmd) {
+    moveAction(cmd);
+});
+
+adapter.getClient().subscribe("/drone/animate", function(cmd) {
+    animateAction(cmd);
+});
+
+adapter.getClient().subscribe("/drone/drone", function(cmd) {
+    droneAction(cmd);
+});
+
+adapter.getClient().subscribe("/drone/recording", function() {
+    record();
+});
+
+adapter.getClient().subscribe("/drone/qrcode", function(data) {
+    var code = data.code;
+    redisCli.saveToRedis(code,function(count,key) {
+        adapter.getClient().publish("/drone/qrcodecounter", {
+            key:key,
+            count:count
+        });
+    });
+});
+
+adapter.getClient().subscribe("/drone/saveImage", function(){
+    snap();
+});
+
+adapter.getClient().subscribe("/drone/getToken", function(data){
+    console.log(data);
+    if(!droneInUse) {
+        droneInUse = true;
+        setNewToken(function(){
+            adapter.getClient().publish("/drone/token/"+data.guid, {
+                token:token,
+                state:droneInUse
+            });
+        });
+    }
+    else {
+        adapter.getClient().publish("/drone/token/"+data.guid, {
+            token:0,
+            state:droneInUse
+        });
+    }
+});
+
+adapter.getClient().subscribe("/drone/release", function(){
+    console.log('drone released');
+    setNewToken(function() {
+        adapter.getClient().publish("/drone/freeDrone", {state:true});
+        droneInUse = false;
+    });
+});
+
+adapter.addExtension(serverAuth);
 adapter.attach(httpServer);
 
-socket = new faye.Client("http://localhost:" + (server.get("port")) + "/faye");
+drone.on('navdata', function(data) {
+    adapter.getClient().publish("/drone/navdata", data);
+});
+
+drone.config('general:navdata_demo','TRUE');
 
 //Creating PNG-Stream and naming every Image with a unix-timestamp
 //png with timestamp is going to be used for qr-code decetion afterwards
@@ -46,7 +143,7 @@ drone.createPngStream().on("data", function(frame) {
     if (imageSendingPaused) {
         return;
     }
-    socket.publish("/drone/image", "/image/" + (seconds));
+    adapter.getClient().publish("/drone/image", "/image/" + (seconds));
 
     imageSendingPaused = true;
     return setTimeout((function() {
@@ -54,70 +151,48 @@ drone.createPngStream().on("data", function(frame) {
     }), 100);
 });
 
-//Drone-Commands for either fly in a direction, perform an animation
-//or do hard-coded moves (takeOff, land, recover)
-socket.subscribe("/drone/move", function(cmd) {
+var droneAction = function(cmd) {
+    var _name;
+    console.log('dronecommand:', cmd);
+    return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
+}
+
+var moveAction = function(cmd) {
     var _name = cmd.action;
     console.log("move", cmd);
     return typeof drone[_name = cmd.action] === "function" ? drone[_name](cmd.speed) : void 0;
-});
+}
 
-socket.subscribe("/drone/animate", function(cmd) {
+var animateAction = function(cmd) {
     console.log('animate', cmd);
-    return drone.animate(cmd.action, cmd.duration);
-});
+    drone.animate(cmd.action, cmd.duration);
+}
 
-socket.subscribe("/drone/drone", function(cmd) {
-    var _name;
-    console.log('drone command: ', cmd);
-    return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
-});
-
-socket.subscribe("/drone/recording", function() {
+var record = function() {
     if(recording) {
         VideoMaker.makeVideo('./video/'+folder+'/',function(filename) {
-            socket.publish("/drone/newvideo", "/video/" + (filename));
+            adapter.getClient().publish("/drone/newvideo", "/video/" + (filename));
             recording = false;
         });
     }
     else {
         var d = new Date();
         folder = d.getTime();
-        fs.mkdirSync('video/'+folder); 
+        fs.mkdirSync('video/'+folder);
         recording = true;
     }
-});
+}
 
-socket.subscribe("/drone/qrcode", function(data) {
-    var code = data.code;
-    redisCli.saveToRedis(code,function(count,key) {
-       socket.publish("/drone/qrcodecounter", {
-            key:key,
-            count:count
-       }); 
-    });
-});
-
-socket.subscribe("/drone/saveImage", function(){
+var snap = function() {
     var imagedata = '';
     var d = new Date();
     var imageName = "droneImage"+d.getTime()+".png";
-    fs.writeFile('picture/'+imageName, currentImg, 'binary', function(err){
-        if(err) throw err;
-    });
-});
+    if(typeof currentImg !== 'undefined') {
+        fs.writeFile('picture/'+imageName, currentImg, 'binary', function(err){
+            if(err) throw err;
+        });
+    }
+}
 
-
-drone.on('navdata', function(data) {
-    return socket.publish("/drone/navdata", data);
-});
-
-//Server getting the Image from Livestream
-server.get("/image/:id", function(req, res) {
-    res.writeHead(200, {
-        "Content-Type": "image/png"
-    });
-    res.end(currentImg, "binary");
-});
 
 

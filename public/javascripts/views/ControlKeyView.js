@@ -64,7 +64,7 @@
 		});
 
 		this.normalControl(that); //** for normal fly
-		//this.startEmergencyMode(that);
+//		this.startEmergencyMode(that);
 
 	};
 

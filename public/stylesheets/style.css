@@ -27,6 +27,7 @@ body {
 }
 
 .buttons {
+    padding:2%;
     text-align: center;
 }
 .dropdown-menu {
