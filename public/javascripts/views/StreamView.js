@@ -55,7 +55,7 @@ define(['jQuery', 'logger'], function($, logger) {
 	StreamView.prototype.onBtnPlayerClick = function(e) {
         $("#intro .btn-player").off("click", this.onBtnPlayerClick);
         $("#intro").removeClass("active");
-        var name = "Noname";
+        var name = "No Name";
         if ($("#playerNameInput").val()) {
             name = $("#playerNameInput").val();
         }
@@ -77,17 +77,8 @@ define(['jQuery', 'logger'], function($, logger) {
 					$("#qr>tbody").append('<tr class="blinkLine"><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
 				}
 				if(index == 2) {
-					$('body').append('<div id="intro" class="intro active">\
-									    <div class="overlay1"></div>\
-									    <div class=content>\
-									        <h2>Enter Name for Hall of Fame!</h2>\
-									        <p>Fachhochschule Salzburg - MMT-B2011<br>Eschbacher Georg + Hettegger Michael</p>\
-									        <input id="playerNameInput" type="text" name="playerName" placeholder="Enter Playername"/>\
-									        <a class="btn-player" href="#">weiter</a>\
-									    </div>\
-									</div>');
+					$("#intro").addClass('active');
 				}
-				//$("tbody").append('<tr><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
 			}
 		}
 	};

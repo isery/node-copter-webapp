@@ -37,33 +37,44 @@
 </div>
 
 <div  class="container myContainer">
-<div id="mobileJoystick" class="container-fluid">
-      <div class="row">
-        <div class="span8">
-          <div class="buttons">
-              <div id="tokenbutton"></div>
-              <div class="btn-toolbar" id="controlView">
-              </div>
-          </div>
-          <div id="batteryProgress"></div>
-          <div id="stream">
-            <div id="attention" style="opacity:0">
-              <div id="alertScreen"></div>
-              <div id="alertScreen2">
-                <p>LAND</p>
-                <p>THE</p>
-                <p>DRONE</p>
+  <div id="intro" class="intro">
+    <div class="overlay"></div>
+    <div class="content">
+      <h2>Enter Name for Hall of Fame!</h2>
+      <p>Fachhochschule Salzburg - MMT-B2011<br>Eschbacher Georg + Hettegger Michael</p>
+      <div id="containerPlayer">  
+        <input id="playerNameInput" type="text" name="playerName" placeholder="Enter Playername"/>
+        <a class="btn-player" href="#">weiter</a>
+      </div>
+    </div>
+  </div>
+  <div id="mobileJoystick" class="container-fluid">
+        <div class="row">
+          <div class="span8">
+            <div class="buttons">
+                <div id="tokenbutton"></div>
+                <div class="btn-toolbar" id="controlView">
+                </div>
+            </div>
+            <div id="batteryProgress"></div>
+            <div id="stream">
+              <div id="attention" style="opacity:0">
+                <div id="alertScreen"></div>
+                <div id="alertScreen2">
+                  <p>LAND</p>
+                  <p>THE</p>
+                  <p>DRONE</p>
+                </div>
               </div>
             </div>
           </div>
+          <div id="stats" class="span4"></div>
         </div>
-        <div id="stats" class="span4"></div>
-      </div>
-      <div></div>
-</div>
-<div class="row" id="mobileState">
-  <div id="mobileButtons" class="span4"></div><div id="mobileBatteryProgress" class="span7"></div>    
-</div>
+        <div></div>
+  </div>
+  <div class="row" id="mobileState">
+    <div id="mobileButtons" class="span4"></div><div id="mobileBatteryProgress" class="span7"></div>    
+  </div>
 <hr>
 
   <footer>
