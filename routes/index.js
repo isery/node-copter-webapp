@@ -2,6 +2,7 @@
 /*
  * GET home page.
  */
+redisCli = require('../redisClient'),
 
 
 exports.index = function(req, res){
@@ -14,7 +15,10 @@ exports.contact = function(req, res){
 };
 
 exports.about = function(req, res){
-  res.render('about', { title: 'Node-Copter', author: 'Georg Eschbacher & Michael Hettegger', description: 'Fly the Node-Copter'});
+	redisCli.getNames(function(data) {
+		var names = data;
+		res.render('about', {names : names, title: 'Node-Copter', author: 'Georg Eschbacher & Michael Hettegger', description: 'Fly the Node-Copter'});
+	});
 };
 
 exports.connect = function(req, res){

@@ -115,6 +115,10 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon', 'onsnap
             }
         });
 
+        droneFaye.subscribe("/drone/newgame/"+guid, function(src) {
+            $("#qr").remove();
+  		});
+
         droneFaye.subscribe("/drone/freeDrone", function(data) {
             $('.controls').addClass('disabled');
             $('#snap').removeClass('disbled');

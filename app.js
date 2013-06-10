@@ -121,6 +121,12 @@ adapter.getClient().subscribe("/drone/release", function(){
     });
 });
 
+adapter.getClient().subscribe('/drone/halloffame', function(data) {
+    redisClient.setName(data.data, function() {
+      adapter.getClient().publish("/drone/newgame/"+data.guid, {});  
+    });
+});
+
 adapter.addExtension(serverAuth);
 adapter.attach(httpServer);
 

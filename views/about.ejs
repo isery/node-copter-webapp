@@ -21,11 +21,14 @@
 </div>
 
 <div class="container">
-
-    
-
-  <hr>
-
+  <div style="margin-top:100px !important;">
+  <table class="table table-striped table-bordered" style="width:500px;">
+    <tr><th>Hall of Fame</th></tr>
+    <% for(var i =0; i<names.length;i++) { %>
+        <tr><td><%=names[i]%></td></tr>
+    <%  } %>
+  </table>
+</div>
   <footer>
     <p>&copy; <%= author %></p>
   </footer>
