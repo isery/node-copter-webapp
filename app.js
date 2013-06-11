@@ -80,10 +80,12 @@ adapter.getClient().subscribe("/drone/recording", function() {
 adapter.getClient().subscribe("/drone/qrcode", function(data) {
     var code = data.code;
     redisCli.saveToRedis(code,function(count,key) {
-        adapter.getClient().publish("/drone/qrcodecounter", {
-            key:key,
-            count:count
-        });
+        if(count !== 0) {
+            adapter.getClient().publish("/drone/qrcodecounter", {
+                key:key,
+                count:count
+            });
+        }
     });
 });
 

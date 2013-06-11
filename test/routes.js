@@ -12,7 +12,7 @@ var response = {
 };
 
 describe('routes', function() {
-    /*describe('#show Index', function() {
+    describe('#show Index', function() {
       it('should be a function and set proper ViewName and viewData', function() {
           expect(routes.index).to.be.a('function');
           routes.index(request, response);
@@ -27,22 +27,24 @@ describe('routes', function() {
             expect(response.viewName).to.be('contact');
             expect(response.data).to.not.be.empty();
         });
-    });*/
+    });
     describe('#show about', function(done) {
         it('should be a function and set proper ViewName and viewData', function() {
             expect(routes.about).to.be.a('function');
             routes.about(request, response);
-            expect(response.viewName).to.be('about');
-            expect(response.data).to.not.be.empty();
-            done();
+            setTimeout(function() {
+                expect(response.viewName).to.be('about');
+                expect(response.data).to.not.be.empty();
+                done(); 
+            }, 30);            
         });
     });
-    /*describe('#show connect', function() {
+    describe('#show connect', function() {
         it('should be a function and set proper ViewName and viewData', function() {
             expect(routes.connect).to.be.a('function');
             routes.connect(request, response);
             expect(response.viewName).to.be('connect');
             expect(response.data).to.not.be.empty();
         });
-    });*/
+    });
 });
