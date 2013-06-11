@@ -8,7 +8,7 @@ function($, logger, grid, version, detector, formatinf, errorlevel, bitmat, data
             try{
                 qrcode.decode(that.qrImg.src);
                 qrcode.callback = function (data){
-                    //R-Code Inhalt hier verfügbar!!
+                    console.log(data);
                     that.checkMessage(data)
                 };
             }catch(e){

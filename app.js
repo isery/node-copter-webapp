@@ -35,10 +35,7 @@ server.get("/image/:id", function(req, res) {
 
 var serverAuth = {
     incoming: function(message, callback) {
-        if(message.channel === '/drone/drone' || message.channel === '/drone/move'
-            || message.channel === '/drone/animate' || message.channel === '/drone/recording'
-            || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage'
-            || message.channel === '/drone/release') {
+        if(message.channel === '/drone/drone' || message.channel === '/drone/move' || message.channel === '/drone/animate' || message.channel === '/drone/recording' || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage' || message.channel === '/drone/release') {
             var msgToken = message.ext && message.ext.token;
             if (token !== msgToken) {
                 message.error = 'Invalid auth token';
@@ -55,7 +52,7 @@ var setNewToken = function(callback) {
             callback();
         }
     });
-}
+};
 
 var adapter = new faye.NodeAdapter({
     mount:'/faye',
@@ -122,7 +119,7 @@ adapter.getClient().subscribe("/drone/release", function(){
 });
 
 adapter.getClient().subscribe('/drone/halloffame', function(data) {
-    redisClient.setName(data.data, function() {
+    redisCli.setNames(data.data, function() {
       adapter.getClient().publish("/drone/newgame/"+data.guid, {});  
     });
 });
@@ -153,7 +150,7 @@ drone.createPngStream().on("data", function(frame) {
 
     imageSendingPaused = true;
     return setTimeout((function() {
-        return imageSendingPaused = false;
+        imageSendingPaused = false;
     }), 100);
 });
 
@@ -161,18 +158,18 @@ var droneAction = function(cmd) {
     var _name;
     console.log('dronecommand:', cmd);
     return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
-}
+};
 
 var moveAction = function(cmd) {
     var _name = cmd.action;
     console.log("move", cmd);
     return typeof drone[_name = cmd.action] === "function" ? drone[_name](cmd.speed) : void 0;
-}
+};
 
 var animateAction = function(cmd) {
     console.log('animate', cmd);
     drone.animate(cmd.action, cmd.duration);
-}
+};
 
 var record = function() {
     if(recording) {
@@ -187,7 +184,7 @@ var record = function() {
         fs.mkdirSync('video/'+folder);
         recording = true;
     }
-}
+};
 
 var snap = function() {
     var imagedata = '';
@@ -198,7 +195,7 @@ var snap = function() {
             if(err) throw err;
         });
     }
-}
+};
 
 
 

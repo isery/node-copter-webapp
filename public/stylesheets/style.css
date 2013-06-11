@@ -208,9 +208,8 @@ body {
 
 .blinkLine {
     -webkit-transition:all 1s ease-in-out;
-    -webkit-animation: blink123 normal 3 infinite ease-in-out;
+    -webkit-animation: blinkTR normal 3s 3 ease-in-out;
  }
-
 @media screen and (device-aspect-ratio: 40/71) and (orientation : landscape) {
     body{
         padding: 0 !important;

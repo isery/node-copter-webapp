@@ -56,7 +56,7 @@ require.config({
 		},
 		'decoder':{
 			deps:['gf256']
-		},
+		}
 	}
 });
 
@@ -90,14 +90,11 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon', 'onsnap
 
         droneFaye.addExtension({
             outgoing: function(message, callback) {
-                if(message.channel === '/drone/drone' || message.channel === '/drone/move'
-                    || message.channel === '/drone/animate' || message.channel === '/drone/recording'
-                    || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage'
-                    || message.channel === '/drone/release') {
+                if(message.channel === '/drone/drone' || message.channel === '/drone/move' || message.channel === '/drone/animate' || message.channel === '/drone/recording' || message.channel === '/drone/qrcode' || message.channel === '/drone/saveImage' || message.channel === '/drone/release') {
                     message.ext = message.ext || {};
                     message.ext.token = USER_TOKEN;
                 }
-                callback(message)
+                callback(message);
             }
         });
 
@@ -116,8 +113,8 @@ require(['jQuery', 'underscore', 'keydrown','faye', 'joystick', 'bacon', 'onsnap
         });
 
         droneFaye.subscribe("/drone/newgame/"+guid, function(src) {
-            $("#qr").remove();
-  		});
+			$("#qr").remove();
+		});
 
         droneFaye.subscribe("/drone/freeDrone", function(data) {
             $('.controls').addClass('disabled');

@@ -12,7 +12,7 @@ module.exports = function(grunt) {
           module: true,
           document: true,
           smarttabs: true
-        },
+        }
       }
     },
     watch: {

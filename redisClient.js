@@ -4,7 +4,6 @@ redisClient = redis.createClient();
 
 exports.saveToRedis = function(key,callback) {
 	if(redisClient.sismember('codes',key)) {
-		console.log('ismember');
 		redisClient.incr(key);
 		redisClient.get(key, function(err, reply) {
 		    // reply is null when the key is missing
@@ -14,13 +13,13 @@ exports.saveToRedis = function(key,callback) {
 }
 
 exports.getNames = function(callback) {
-	redisClient.smembers('thomas',function(err,reply) {
+	redisClient.smembers('userList',function(err,reply) {
 		callback(reply);
 	});
 }
 
-exports.setNames = function(callback) {
-	redisClient.sadd('thomas',function(err,reply) {
+exports.setNames = function(key, callback) {
+	redisClient.sadd('userList', key, function(err,reply) {
 		callback(reply);
 	});
 }

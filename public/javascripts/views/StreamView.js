@@ -1,4 +1,4 @@
-define(['jQuery', 'logger'], function($, logger) {
+define(['jQuery', 'logger', 'keydrown'], function($, logger, kd) {
 	var StreamView = function (droneFaye, model, $element, qrDecoder) {
 		this.model=model;
 		this.droneFaye = droneFaye;
@@ -10,7 +10,7 @@ define(['jQuery', 'logger'], function($, logger) {
         $(".btn-player").click(function() {
         	var name = $('playerNameInput').val();
         });
-        $("#intro .btn-player").on("click", this.onBtnPlayerClick);
+        $("#intro .btn-player").on("click", this.onBtnPlayerClick.bind(this));
 
         
 
@@ -43,7 +43,7 @@ define(['jQuery', 'logger'], function($, logger) {
         $("#attention").css("opacity","100");
         $("#attention").hide();
         $('#stats').append('\
-                <table id="qr" class="table table-striped table-bordered">\
+                <table id="qr" class="table table-bordered">\
                     <tr>\
                         <th>QR-Code</th>\
                         <th>Number of Scanns</th>\
@@ -59,16 +59,22 @@ define(['jQuery', 'logger'], function($, logger) {
         if ($("#playerNameInput").val()) {
             name = $("#playerNameInput").val();
         }
- 		that.droneFaye.publish("/drone/halloffame", {
+ 		this.droneFaye.publish("/drone/halloffame", {
 				data:name
 			});
+
+ 		kd.run(function () {
+  			kd.tick();
+		});
+		
         e.preventDefault();
 	};
 
 	StreamView.prototype.renderStatistics = function () {
-		var value;
+		var value, counter=0;
 		for(var index in this.statistics) {
 			if(this.statistics.hasOwnProperty(index)) {
+				counter++;
 				value = index.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');;
 				if(($("#"+value).length)>0){
 					$("#"+value).html(this.statistics[index]);
@@ -76,7 +82,8 @@ define(['jQuery', 'logger'], function($, logger) {
 				else {
 					$("#qr>tbody").append('<tr class="blinkLine"><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
 				}
-				if(index == 2) {
+				if(counter == 3) {
+					kd.stop();
 					$("#intro").addClass('active');
 				}
 			}

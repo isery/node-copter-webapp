@@ -49,7 +49,7 @@ describe('Check if the drone is connected and ', function(){
             socket.publish("/drone/image", "/image/" + (Math.random()));
             imageSendingPaused = true;
             return setTimeout((function() {
-                return imageSendingPaused = false;
+                imageSendingPaused = false;
             }), 100);
         });
         socket.subscribe("/drone/move", function(cmd) {
@@ -64,7 +64,6 @@ describe('Check if the drone is connected and ', function(){
             var _name;
             console.log('drone command: ', cmd);
             droneBool = true;
-            console.log('----------------------------------')
             return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
         });
 
@@ -149,7 +148,7 @@ describe('Check if the drone is connected and ', function(){
             expect(droneBool).to.equal(true);
             droneBool = false;
             done();
-        },100)
+        },100);
     });
 });
 
