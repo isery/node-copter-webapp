@@ -125,22 +125,21 @@ describe('Check if the drone is connected and ', function(){
             expect(browser.success).to.equal(true);
             expect(browser.location.pathname).to.equal('/connect');
             function mapLoaded(window) {
-              return window.document.querySelector(".btn-success");
+                return window.document.querySelector(".btn-success");
             }
+
             browser.wait(mapLoaded, function() {
                 // Page has a #btn-success element now
-                browser.pressButton(".btn-success", function() {  
-                    //setTimeout is necessary bcs it takes time until the packet arrived 
-                    setTimeout(function() {
-                        expect(droneBool).to.equal(true);
-                        droneBool = false;
-                        done();
-                    },1000);    
+                browser.pressButton(".btn-success", function() {
+                    console.log(droneBool);  
+                    expect(droneBool).to.equal(true);
+                    droneBool = false;
+                    done();    
                 });
             });
         });
     });
-
+   
    it('shows that a faye packet will arrive when publish in test' , function(done){
         client.publish('/drone/drone', { action: 'takeoff' });
         //setTimeout is necessary bcs it takes time until the packet arrived 
