@@ -75,7 +75,8 @@ define(['jQuery', 'logger', 'keydrown'], function($, logger, kd) {
 		for(var index in this.statistics) {
 			if(this.statistics.hasOwnProperty(index)) {
 				counter++;
-				value = index.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');;
+				value = index.toLowerCase().replace(/[^0-9a-z-]/g,"");
+				//value = index.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');;
 				if(($("#"+value).length)>0){
 					$("#"+value).html(this.statistics[index]);
 				}
