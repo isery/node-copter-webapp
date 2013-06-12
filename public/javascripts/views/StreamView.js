@@ -4,15 +4,19 @@ define(['jQuery', 'logger', 'keydrown'], function($, logger, kd) {
 		this.droneFaye = droneFaye;
         this.element = $element;
         this.qrDecoder = qrDecoder;
-        var that = this;
+        this.introActive = true;
+        
         this.statistics = [];
-
         $(".btn-player").click(function() {
         	var name = $('playerNameInput').val();
         });
         $("#intro .btn-player").on("click", this.onBtnPlayerClick.bind(this));
-
-        
+		var that = this;
+        window.addEventListener("keydown", function(e) {
+		    if([13].indexOf(e.keyCode) > -1) {
+		        that.onBtnPlayerClick(e);
+		    }
+		}, false);
 
 
         this.render();
@@ -83,8 +87,9 @@ define(['jQuery', 'logger', 'keydrown'], function($, logger, kd) {
 				else {
 					$("#qr>tbody").append('<tr class="blinkLine"><td>'+index+'</td><td id ='+value+'>'+this.statistics[index]+'</td></tr>');
 				}
-				if(counter == 3) {
+				if(counter == 3 && this.introActive) {
 					kd.stop();
+					this.introActive = false;
 					$("#intro").addClass('active');
 				}
 			}
