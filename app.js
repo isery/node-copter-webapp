@@ -153,7 +153,7 @@ drone.createPngStream().on("data", function(frame) {
     imageSendingPaused = true;
     return setTimeout((function() {
         imageSendingPaused = false;
-    }), 200);
+    }), 100);
 });
 
 var droneAction = function(cmd) {
