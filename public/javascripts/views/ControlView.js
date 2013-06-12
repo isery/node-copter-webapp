@@ -82,7 +82,6 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
 		  	});
 		});
 		$("*[data-action]").on("mouseup", function(ev) {
-            $('.brand').text('test');
 			that.droneFaye.publish("/drone/move", {
 		    	action: $(this).attr("data-param"),
 		    	speed: $(this).attr("data-action") === "move" ? 0 : void 0

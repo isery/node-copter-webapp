@@ -32,9 +32,11 @@ describe('routes', function() {
         it('should be a function and set proper ViewName and viewData', function() {
             expect(routes.about).to.be.a('function');
             routes.about(request, response);
-            expect(response.viewName).to.be('about');
-            expect(response.data).to.not.be.empty();
-            done();
+            setTimeout(function() {
+                expect(response.viewName).to.be('about');
+                expect(response.data).to.not.be.empty();
+                done(); 
+            }, 30);            
         });
     });
     describe('#show connect', function() {

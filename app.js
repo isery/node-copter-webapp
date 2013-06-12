@@ -80,10 +80,12 @@ adapter.getClient().subscribe("/drone/recording", function() {
 adapter.getClient().subscribe("/drone/qrcode", function(data) {
     var code = data.code;
     redisCli.saveToRedis(code,function(count,key) {
-        adapter.getClient().publish("/drone/qrcodecounter", {
-            key:key,
-            count:count
-        });
+        if(count !== 0) {
+            adapter.getClient().publish("/drone/qrcodecounter", {
+                key:key,
+                count:count
+            });
+        }
     });
 });
 
@@ -157,13 +159,25 @@ drone.createPngStream().on("data", function(frame) {
 var droneAction = function(cmd) {
     var _name;
     console.log('dronecommand:', cmd);
-    return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;
+    if(typeof drone[_name = cmd.action] === "function"){
+        drone[_name]();
+    }
+    /*else{
+        void 0;
+    }
+    return typeof drone[_name = cmd.action] === "function" ? drone[_name]() : void 0;*/
 };
 
 var moveAction = function(cmd) {
     var _name = cmd.action;
     console.log("move", cmd);
-    return typeof drone[_name = cmd.action] === "function" ? drone[_name](cmd.speed) : void 0;
+    if(typeof drone[_name = cmd.action] === "function"){
+        drone[_name](cmd.speed);
+    }
+    /*else{
+        void 0;
+    }
+    return typeof drone[_name = cmd.action] === "function" ? drone[_name](cmd.speed) : void 0;*/
 };
 
 var animateAction = function(cmd) {

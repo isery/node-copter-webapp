@@ -1,7 +1,10 @@
 ##node-copter-webapp
 
->Use a mobile browser to control the AR Parrot Drone 2.0 via Node.js
->Furthermore we can scan qr-code through out the stream!
+>Use smartphones, tablets or desktop to control the AR Parrot Drone 2.0 via Node.js server
+>Record flights or take pictures
+>Scan qr-codes through out the stream!
+>Snap to flip
+>Hook up and realease!
 >The Project ist still under heavy development!
 
 ```javascript
@@ -18,7 +21,7 @@ npm start
 ###Installation
 --------
 
-Some Modules of the Testframework need to be installed globally
+Some Modules need to be installed globally
 ```javascript
 nvm use v0.8.14
 	npm install -g mocha
@@ -26,13 +29,6 @@ nvm use v0.8.14
 	npm install -g connect
 	npm install -g node-gyp
 ```
-	
-After finishing to install those global modules, in order to get node-canvas
-(which we use to decode qr-codes in livestream) to work, you need to have 
-http://cairographics.org/download/ installed; for further installation-information
-visit their page
-http://cairographics.org/download/ - automatic! [Cairographics](http://cairographics.org/download/)
-
 
 ### Troubleshooting
 If you have a problem with zombie and contextify, go to 
