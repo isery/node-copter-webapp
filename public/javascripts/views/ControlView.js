@@ -27,7 +27,12 @@ define(['jQuery', 'bootstrap','logger'], function($, _bootstrap, logger) {
                 action: "flipLeft",
                 duration: 15
             });
-        }
+            setTimeout(function() {
+                that.droneFaye.publish("/drone/animate", {
+                action: "flipLeft",
+                duration: 15})
+            }, 200);
+        };
 
         $('#snap').on('click', function(ev) {
             if($(this).hasClass('disabled')) {
