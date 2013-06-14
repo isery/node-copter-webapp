@@ -25,9 +25,15 @@ Some Modules need to be installed globally
 ```javascript
 nvm use v0.8.14
 	npm install -g mocha
-	npm install -g grunt
-	npm install -g connect
-	npm install -g node-gyp
+	npm install -g grunt-cli
+```
+
+You also need a redis-database. The database needs one set called codes which includes qr-codes you want to allow.
+
+Type these commands in your redis-cli:
+
+```javascript
+SADD codes yourqrcode
 ```
 
 ### Troubleshooting
